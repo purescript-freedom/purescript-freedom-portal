@@ -59,10 +59,10 @@ item x =
     # H.css style
     # H.onClick openDialog
     # H.kids
-      [ H.el $ H.span # H.kids
-          [ H.t $ "Item " <> x.id ]
-      , dialog x
-      ]
+        [ H.el $ H.span # H.kids
+            [ H.t $ "Item " <> x.id ]
+        , dialog x
+        ]
   where
     openDialog = const $ reduce $ open x.id
     style =
