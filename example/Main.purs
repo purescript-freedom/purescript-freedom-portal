@@ -55,7 +55,7 @@ view state =
 
 item :: Item -> Html
 item x =
-  H.el $ H.li
+  H.keyed x.id $ H.el $ H.li
     # H.css style
     # H.onClick openDialog
     # H.kids
