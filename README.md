@@ -4,6 +4,8 @@
 
 A way to render children into a node that exists outside the DOM hierarchy of the parent node.
 
+[Demo](https://purescript-freedom.github.io/purescript-freedom-portal/)
+
 ## Installation
 
 ```
