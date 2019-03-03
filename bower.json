@@ -1,0 +1,31 @@
+{
+  "name": "purescript-freedom-portal",
+  "license": "MIT",
+  "homepage": "https://github.com/purescript-freedom/purescript-freedom-portal",
+  "authors": [
+    "Shinya Takahashi <s.takahashi313@gmail.com>"
+  ],
+  "description": "A way to render children into a node that exists outside the DOM hierarchy of the parent node",
+  "keywords": [
+    "purescript",
+    "virtual-dom",
+    "ui",
+    "portal"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/purescript-freedom/purescript-freedom-portal.git"
+  },
+  "moduleType": [
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-freedom": "^0.0.3"
+  }
+}
