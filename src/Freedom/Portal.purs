@@ -22,11 +22,18 @@ import Web.HTML.HTMLDocument (toParentNode, toDocument, body)
 import Web.HTML.HTMLElement as HE
 import Web.HTML.Window (document)
 
+-- | The type of portal root.
+-- |
+-- | - `id`: The id of portal root dom
+-- | - `z`: The z-index of portal root dom
 type PortalRoot =
   { id :: String
   , z :: Int
   }
 
+-- | Render a `VNode` to the portal root.
+-- |
+-- | The portal root will be created automatically.
 portal
   :: forall f state
    . Functor (f state)
