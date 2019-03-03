@@ -8,7 +8,7 @@
     "build": "pulp build",
     "test": "pulp test",
     "start": "pulp build -I example && parcel ./example/index.html",
-    "demo": "rm ./example.*.js && pulp build -I example && parcel build ./example/index.html --no-source-maps -o ./index.html -d ./",
+    "demo": "rm ./example.*.js && pulp build -I example && parcel build ./example/index.html --no-source-maps -o ./index.html -d ./ --public-url ./",
     "pulp:version": "pulp version",
     "pulp:publish": "pulp publish",
     "pulp:login": "pulp login"
