@@ -44,7 +44,7 @@ portal portalRoot child =
   H.op $ H.div
     # H.didCreate (const $ didCreatePortal portalRoot)
     # H.didUpdate (const $ didUpdatePortal portalRoot)
-    # H.didDelete (didDeletePortal portalRoot)
+    # H.didDelete (const $ didDeletePortal portalRoot)
     # H.kids [ child ]
 
 didCreatePortal
