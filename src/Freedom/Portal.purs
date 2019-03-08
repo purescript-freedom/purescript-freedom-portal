@@ -42,30 +42,30 @@ portal
   -> VNode f state
 portal portalRoot child =
   H.op $ H.div
-    # H.didCreate (const $ renderToPortalRoot portalRoot)
-    # H.didUpdate (const $ renderToPortalRoot portalRoot)
-    # H.didDelete (const $ removeFromPortalRoot portalRoot)
+    # H.didCreate (const $ renderChildren portalRoot)
+    # H.didUpdate (const $ renderChildren portalRoot)
+    # H.didDelete (const $ deleteChildren portalRoot)
     # H.kids [ child ]
 
-renderToPortalRoot
+renderChildren
   :: forall f state
    . Functor (f state)
   => PortalRoot
   -> FreeT (f state) (VRender f state) Unit
-renderToPortalRoot portalRoot = do
+renderChildren portalRoot = do
   node <- liftEffect $ getPortalRoot portalRoot
-  { getOriginChildren, renderChildren } <- lift operations
-  liftEffect $ getOriginChildren >>= renderChildren node
+  r <- lift operations
+  liftEffect $ r.getOriginChildren >>= r.renderChildren node
 
-removeFromPortalRoot
+deleteChildren
   :: forall f state
    . Functor (f state)
   => PortalRoot
   -> FreeT (f state) (VRender f state) Unit
-removeFromPortalRoot portalRoot = do
+deleteChildren portalRoot = do
   node <- liftEffect $ getPortalRoot portalRoot
-  { renderChildren } <- lift operations
-  liftEffect $ renderChildren node []
+  r <- lift operations
+  liftEffect $ r.renderChildren node []
   body' <- liftEffect
     $ unsafePartial
     $ fromJust
