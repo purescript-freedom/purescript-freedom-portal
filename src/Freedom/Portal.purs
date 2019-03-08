@@ -11,7 +11,7 @@ import Data.Maybe (Maybe(..), fromJust)
 import Effect (Effect)
 import Effect.Class (liftEffect)
 import Freedom.Markup as H
-import Freedom.VNode (VNode, VRender, getOriginChildren, renderChildren)
+import Freedom.VNode (VNode, VRender, operations)
 import Partial.Unsafe (unsafePartial)
 import Web.DOM.Document (createElement)
 import Web.DOM.Element as E
@@ -54,7 +54,8 @@ didCreatePortal
   -> FreeT (f state) (VRender f state) Unit
 didCreatePortal portalRoot = do
   node <- liftEffect $ getPortalRoot portalRoot
-  lift $ getOriginChildren >>= renderChildren node
+  { getOriginChildren, renderChildren } <- lift operations
+  liftEffect $ getOriginChildren >>= renderChildren node
 
 didUpdatePortal
   :: forall f state
@@ -63,7 +64,8 @@ didUpdatePortal
   -> FreeT (f state) (VRender f state) Unit
 didUpdatePortal portalRoot = do
   node <- liftEffect $ getPortalRoot portalRoot
-  lift $ getOriginChildren >>= renderChildren node
+  { getOriginChildren, renderChildren } <- lift operations
+  liftEffect $ getOriginChildren >>= renderChildren node
 
 didDeletePortal
   :: forall f state
@@ -72,7 +74,8 @@ didDeletePortal
   -> FreeT (f state) (VRender f state) Unit
 didDeletePortal portalRoot = do
   node <- liftEffect $ getPortalRoot portalRoot
-  lift $ renderChildren node []
+  { renderChildren } <- lift operations
+  liftEffect $ renderChildren node []
   body' <- liftEffect
     $ unsafePartial
     $ fromJust
