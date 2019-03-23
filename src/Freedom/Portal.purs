@@ -18,7 +18,7 @@ import Web.DOM.Element as E
 import Web.DOM.Node (Node, appendChild, removeChild)
 import Web.DOM.ParentNode (QuerySelector(..), querySelector)
 import Web.HTML (window)
-import Web.HTML.HTMLDocument (toParentNode, toDocument, body)
+import Web.HTML.HTMLDocument (body, toDocument, toParentNode)
 import Web.HTML.HTMLElement as HE
 import Web.HTML.Window (document)
 

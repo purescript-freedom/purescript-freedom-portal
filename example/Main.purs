@@ -2,14 +2,14 @@ module Main where
 
 import Prelude
 
-import Data.Array ((..), foldl)
+import Data.Array (foldl, (..))
 import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Foreign.Object (Object, empty, insert, update, values)
 import Freedom as Freedom
 import Freedom.Markup as H
 import Freedom.Portal (portal)
-import Freedom.TransformF.Simple (VQueryF, transformF, reduce)
+import Freedom.TransformF.Simple (VQueryF, reduce, transformF)
 import Freedom.VNode (VNode)
 
 type Item =
