@@ -8,8 +8,16 @@ A way to render children into a node that exists outside the DOM hierarchy of th
 
 ## Installation
 
+### Bower
+
 ```
-bower install purescript-freedom-portal
+$ bower install purescript-freedom-portal
+```
+
+### Spago
+
+```
+$ spago install freedom-portal
 ```
 
 ## Documentation
