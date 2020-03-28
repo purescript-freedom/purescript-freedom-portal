@@ -9,8 +9,7 @@ import Foreign.Object (Object, empty, insert, update, values)
 import Freedom as Freedom
 import Freedom.Markup as H
 import Freedom.Portal (portal)
-import Freedom.TransformF.Simple (VQueryF, reduce, transformF)
-import Freedom.VNode (VNode)
+import Freedom.UI (VNode)
 
 type Item =
   { id :: String
@@ -19,14 +18,11 @@ type Item =
 
 type State = Object Item
 
-type Html = VNode VQueryF State
-
 main :: Effect Unit
 main = Freedom.run
   { selector: "#app"
   , initialState
   , subscriptions: []
-  , transformF
   , view
   }
 
@@ -46,46 +42,45 @@ close id = update (Just <<< _ { opened = false }) id
 
 -- View
 
-view :: State -> Html
+view :: State -> VNode State
 view state =
-  H.el $ H.div # H.kids
-    [ H.el $ H.h1 # H.kids [ H.t "Portal Demo" ]
-    , H.el $ H.ul # H.kids (item <$> values state)
+  H.div # H.kids
+    [ H.h1 # H.kids [ H.t "Portal Demo" ]
+    , H.ul # H.kids (item <$> values state)
     ]
 
-item :: Item -> Html
+item :: Item -> VNode State
 item x =
-  H.keyed x.id $ H.el $ H.li
+  H.keyed x.id $ H.li
     # H.css style
-    # H.onClick openDialog
+    # H.onClick (const openDialog)
     # H.kids
-        [ H.el $ H.span # H.kids
-            [ H.t $ "Item " <> x.id ]
+        [ H.span # H.kids [ H.t $ "Item " <> x.id ]
         , dialog x
         ]
   where
-    openDialog = const $ reduce $ open x.id
+    openDialog { query } = query.reduce $ open x.id
     style =
       """
       .& { cursor: pointer; }
       .&:hover { opacity: 0.5; }
       """
 
-dialog :: Item -> Html
+dialog :: Item -> VNode State
 dialog x =
   if not x.opened
-    then H.el $ H.div
+    then H.div
     else
-      portal' $ H.el $ H.div
+      portal' $ H.div
         # H.css overlayStyle
-        # H.onClick closeDialog
+        # H.onClick (const closeDialog)
         # H.kids
-            [ H.el $ H.div # H.css boxStyle # H.kids
+            [ H.div # H.css boxStyle # H.kids
                 [ H.t $ "Dialog: Item " <> x.id ]
             ]
   where
     portal' = portal { id: "dialog-portal", z: 0 }
-    closeDialog = const $ reduce $ close x.id
+    closeDialog { query } = query.reduce $ close x.id
     overlayStyle =
       """
       .& {
