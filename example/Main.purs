@@ -51,7 +51,8 @@ view state =
 
 item :: Item -> VNode State
 item x =
-  H.keyed x.id $ H.li
+  H.li
+    # H.key (x.id)
     # H.css style
     # H.onClick (const openDialog)
     # H.kids
