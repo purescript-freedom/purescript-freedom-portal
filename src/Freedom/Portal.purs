@@ -5,13 +5,10 @@ module Freedom.Portal
 
 import Prelude
 
-import Control.Monad.Free.Trans (FreeT)
-import Control.Monad.Trans.Class (lift)
 import Data.Maybe (Maybe(..), fromJust)
 import Effect (Effect)
-import Effect.Class (liftEffect)
 import Freedom.Markup as H
-import Freedom.VNode (VNode, VRender, operations)
+import Freedom.UI (VNode, Operation)
 import Partial.Unsafe (unsafePartial)
 import Web.DOM.Document (createElement)
 import Web.DOM.Element as E
@@ -35,43 +32,40 @@ type PortalRoot =
 -- |
 -- | The portal root will be created automatically.
 portal
-  :: forall f state
-   . Functor (f state)
-  => PortalRoot
-  -> VNode f state
-  -> VNode f state
+  :: forall state
+   . PortalRoot
+  -> VNode state
+  -> VNode state
 portal portalRoot child =
-  H.op $ H.div
-    # H.didCreate (const $ renderChildren portalRoot)
-    # H.didUpdate (const $ renderChildren portalRoot)
+  H.div
+    # H.renderingManually
+    # H.didCreate (const $ renderChildren portalRoot child)
+    # H.didUpdate (const $ renderChildren portalRoot child)
     # H.didDelete (const $ deleteChildren portalRoot)
-    # H.kids [ child ]
 
 renderChildren
-  :: forall f state
-   . Functor (f state)
-  => PortalRoot
-  -> FreeT (f state) (VRender f state) Unit
-renderChildren portalRoot = do
-  node <- liftEffect $ getPortalRoot portalRoot
-  r <- lift operations
-  liftEffect $ r.getOriginChildren >>= r.renderChildren node
+  :: forall state
+   . PortalRoot
+  -> VNode state
+  -> Operation state
+  -> Effect Unit
+renderChildren portalRoot child { renderer } = do
+  node <- getPortalRoot portalRoot
+  renderer.renderChildren node [ child ]
 
 deleteChildren
-  :: forall f state
-   . Functor (f state)
-  => PortalRoot
-  -> FreeT (f state) (VRender f state) Unit
-deleteChildren portalRoot = do
-  node <- liftEffect $ getPortalRoot portalRoot
-  r <- lift operations
-  liftEffect $ r.renderChildren node []
-  body' <- liftEffect
-    $ unsafePartial
+  :: forall state
+   . PortalRoot
+  -> Operation state
+  -> Effect Unit
+deleteChildren portalRoot { renderer } = do
+  node <- getPortalRoot portalRoot
+  renderer.renderChildren node []
+  body' <- unsafePartial
     $ fromJust
     <$> (window >>= document >>= body)
     <#> HE.toNode
-  void $ liftEffect $ removeChild node body'
+  void $ removeChild node body'
 
 getPortalRoot :: PortalRoot -> Effect Node
 getPortalRoot portalRoot = do
